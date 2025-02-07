@@ -19,7 +19,7 @@ This repository contains a mini ticketing system built with Laravel 10+, Vue.js,
 1. **Clone the Repository:**
 
    ```bash
-   git clone https://github.com/your-repository-url/mini-ticketing-system.git
+   git clone https://github.com/vishal2995/laravel-vue-ticketing-system.git
    cd mini-ticketing-system
    ```
 
