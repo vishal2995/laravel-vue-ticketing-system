@@ -113,15 +113,9 @@ return [
         ],
 
         'mongodb' => [
-            'driver'   => 'mongodb',
-            'host'     => env('DB_HOST', 'mongodb'),
-            'port'     => env('DB_PORT', 27017),
-            'database' => env('DB_DATABASE', 'rocket9'),
-            'username' => env('DB_USERNAME'),
-            'password' => env('DB_PASSWORD'),
-            'options'  => [
-                'database' => env('DB_AUTHENTICATION_DATABASE', 'admin'), // Required with Mongo 3+
-            ],
+            'driver' => 'mongodb',
+            'dsn' => env('DB_URI', 'mongodb+srv://vishalrp:i6vyqJ91Q5SKBc6J@cluster0.u1mnvwv.mongodb.net/rocket9?retryWrites=true&w=majority'),
+            'database' => 'rocket9',
         ],
 
     ],

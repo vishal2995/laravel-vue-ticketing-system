@@ -3,12 +3,12 @@
         <Header />
         <div class="w-full py-5 lg:py-10">
             <div class="sm:container xl:container mx-auto px-5">
+                <AddButton @open-modal="openModal" />
                 <div
                     class="flex flex-col gap-2 pb-4 border border-b-0 border-gray-100 dark:border-white/[0.05] rounded-t-xl sm:flex-row sm:items-center sm:justify-between">
                     <limit-pagination :per-page="ticketStore.per_page" @changeLimit="handleLimitChange" />
                     <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
                         <search @onSearch="handleSearch" />
-                        <AddButton @open-modal="openModal" />
                     </div>
                 </div>
                 <TicketsTable v-if="ticketStore.tickets" :tickets="ticketStore.tickets"

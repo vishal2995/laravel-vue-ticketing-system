@@ -19,9 +19,7 @@
               class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter your email"
             />
-            <span v-if="v$.email.$error" class="text-red-500"
-              >{{ v$.email.$errors[0].$message }}</span
-            >
+            <span v-if="v$.email.$error" class="text-red-500">{{ v$.email.$errors[0].$message }}</span>
           </div>
   
           <!-- Password Input -->
@@ -35,9 +33,7 @@
               class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter your password"
             />
-            <span v-if="v$.password.$error" class="text-red-500"
-              >{{ v$.password.$errors[0].$message }}</span
-            >
+            <span v-if="v$.password.$error" class="text-red-500" >{{ v$.password.$errors[0].$message }}</span >
           </div>
   
           <!-- Submit Button -->
@@ -60,10 +56,10 @@
   </template>
   
 <script setup lang="ts">
-	import { ref, computed } from "vue";
+	import { ref } from "vue";
 	import { useAuthStore } from "@/stores/authStore";
 	import useVuelidate from "@vuelidate/core";
-	import { required, email } from "@vuelidate/validators";
+	import { required, email, helpers } from "@vuelidate/validators";
   import { useRouter } from "vue-router";
   
 	const authStore = useAuthStore();
@@ -73,13 +69,18 @@
 		password: "abcd@1234",
 	});
   
-	const rules = computed(() => ({
-		email: { required, email },
-		password: { required },
-	}));
-  
+  const validations = {
+    email: {
+      required: helpers.withMessage('Email is required.', required),
+      email: helpers.withMessage('Email is invalid.', email)
+    },
+    password: {
+      required: helpers.withMessage('Password is required.', required)
+    }
+  }
+
   const router = useRouter();
-	const v$ = useVuelidate(rules, form);
+	const v$ = useVuelidate(validations, form);
   
 	const handleLogin = async () => {
 		v$.value.$validate();

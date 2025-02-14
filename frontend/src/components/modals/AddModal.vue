@@ -45,7 +45,7 @@
                                  v-model="formData.title"
                                  class="w-full text-gray-900 bg-gray-100 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 p-2.5"
                              />
-                             <span v-if="v$.title.$error" class="text-red-500 text-xs">Title is required</span>
+                            <span v-if="v$.title.$error" class="text-red-500">{{ v$.title.$errors[0].$message }}</span>
                          </div>
      
                          <div class="mb-5">
@@ -58,9 +58,8 @@
                                  v-model="formData.description"
                                  class="w-full text-gray-900 bg-gray-100 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 p-2.5"
                              />
-                             <span v-if="v$.description.$error" class="text-red-500 text-sm">Description is required</span>
+                            <span v-if="v$.description.$error" class="text-red-500">{{ v$.description.$errors[0].$message }}</span>
                          </div>
-     
                          <div class="mb-5">
                              <label for="status" class="block text-base font-medium text-gray-600 mb-1.5">
                                  Status
@@ -74,7 +73,7 @@
                                  <option value="in_progress">In Progress</option>
                                  <option value="closed">Closed</option>
                              </select>
-                             <span v-if="v$.status.$error" class="text-red-500 text-sm">Status is required</span>
+                            <span v-if="v$.status.$error" class="text-red-500">{{ v$.status.$errors[0].$message }}</span>
                          </div>
      
                          <!-- Buttons -->
@@ -104,7 +103,7 @@
 <script lang="ts">
 import { ref, watch, type PropType } from "vue";
 import useVuelidate from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
+import { required, helpers } from "@vuelidate/validators";
 import ModalButton from "../buttons/ModalButton.vue";
   
 interface FormData {
@@ -133,12 +132,15 @@ export default {
       description: "",
       status: "open",
     });
-    const rules = {
-      title: { required },
-      description: { required },
-      status: { required },
-    };
-    const v$ = useVuelidate(rules, formData);
+
+    const validations = {
+      title: {required: helpers.withMessage('Title is required.', required)},
+      description: {required: helpers.withMessage('Description is required.', required)},
+      status: {required: helpers.withMessage('Status is required.', required)}
+    }
+
+
+    const v$ = useVuelidate(validations, formData);
   
     watch(
       () => props.initialData,
