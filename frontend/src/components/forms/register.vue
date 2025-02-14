@@ -20,7 +20,7 @@
             class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter your name"
           />
-          <span v-if="v$.name.$error" class="text-red-500">Name is required</span>
+          <span v-if="v$.name.$error" class="text-red-500">{{ v$.name.$errors[0].$message }}</span>
         </div>
 
         <div class="mb-4">
@@ -35,7 +35,7 @@
             class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter your email"
           />
-          <span v-if="v$.email.$error" class="text-red-500">Email is required</span>
+          <span v-if="v$.email.$error" class="text-red-500">{{ v$.email.$errors[0].$message }}</span>
         </div>
 
         <div class="mb-4">
@@ -50,7 +50,7 @@
             class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter your password"
           />
-          <span v-if="v$.password.$error" class="text-red-500">Password is required</span>
+          <span v-if="v$.password.$error" class="text-red-500">{{ v$.password.$errors[0].$message }}</span>
         </div>
 
         <div class="mb-4">
@@ -67,7 +67,7 @@
             class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter your confirm password"
           />
-          <span v-if="v$.confirm_password.$error" class="text-red-500">Confirm password is required</span>
+          <span v-if="v$.confirm_password.$error" class="text-red-500">{{ v$.confirm_password.$errors[0].$message }}</span>
         </div>
 
         <!-- Submit Button -->
@@ -97,7 +97,7 @@
 	import { ref, computed } from "vue";
 	import { useAuthStore } from "@/stores/authStore";
 	import useVuelidate from "@vuelidate/core";
-	import { required, email, helpers, minLength } from "@vuelidate/validators";
+	import { required, email, minLength, sameAs } from "@vuelidate/validators";
   import { useRouter } from "vue-router";
   
 	const authStore = useAuthStore();
@@ -105,10 +105,10 @@
   const formData = ref({ email: "", name: "", password: "", confirm_password: "" });
   
   const rules = computed(() =>({
-      email: { required },
+      email: { required, email },
       name: { required },
-      password: { required },
-      confirm_password: { required },
+      password: { required, minLength: minLength(8) },
+      confirm_password: { required, sameAs: sameAs(formData.value.password) },
     }));
   
   const router = useRouter();
@@ -116,17 +116,18 @@
   
   const onSubmit = async () => {
       v$.value.$validate();
-      console.log(v$.value.$error);
       if (v$.value.$error) return;
 
-        await authStore.register({
-          email: formData.value.email,
-          name: formData.value.name,
-          password: formData.value.password,
-          password_confirmation: formData.value.confirm_password,
+      await authStore.register({
+        email: formData.value.email,
+        name: formData.value.name,
+        password: formData.value.password,
+        password_confirmation: formData.value.confirm_password,
       })
       .then((response) => {
-        router.push({'name': 'login'}).catch((e) => console.log(e))
+        if(response.success == true) {
+          router.push({ name: 'tickets' })
+        }
       })
     };
 </script>

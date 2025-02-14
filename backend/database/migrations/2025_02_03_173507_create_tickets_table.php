@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->longText('description ');
+            $table->longText('description');
             $table->enum('status', ['open', 'in_progress', 'closed'])->default('open');
             $table->softDeletes();
             $table->timestamps();

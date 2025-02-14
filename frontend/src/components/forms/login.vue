@@ -36,7 +36,7 @@
               placeholder="Enter your password"
             />
             <span v-if="v$.password.$error" class="text-red-500"
-              >Password is required</span
+              >{{ v$.password.$errors[0].$message }}</span
             >
           </div>
   
@@ -63,7 +63,7 @@
 	import { ref, computed } from "vue";
 	import { useAuthStore } from "@/stores/authStore";
 	import useVuelidate from "@vuelidate/core";
-	import { required, email, helpers, minLength } from "@vuelidate/validators";
+	import { required, email } from "@vuelidate/validators";
   import { useRouter } from "vue-router";
   
 	const authStore = useAuthStore();
@@ -90,8 +90,10 @@
 			password: form.value.password,
 		})
     .then((response) => {
-      router.push({'name': 'tickets'}).catch((e) => console.log(e))
+      if(response.success == true) {
+        router.push({'name': 'tickets'}).catch((e) => console.log(e))
+      }
     })
-  	};
+  };
 </script>
   

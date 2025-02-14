@@ -122,10 +122,12 @@
       </tbody>
     </table>
   </div>
+  <pagination class="justify-items-end pt-4" :current-page="currentPage" :total-pages="totalPages" :per-page="perPage" :total-entries="totalTickets" @pageChange="$emit('page-change', $event)"/>
 </template>
 
 <script lang="ts">
 import type { PropType } from 'vue';
+import Pagination from '@/components/common/Pagination.vue';
 
 interface Ticket {
   id: number;
@@ -141,6 +143,24 @@ export default {
       type: Array as PropType<Ticket[]>, // Make sure it's typed as an array of ticket
       required: true,
     },
+    totalPages: {
+      type: Number,
+      default: 1,
+    },
+    currentPage: {
+      type: Number,
+      default: 1,
+    },
+    perPage: {
+      type: Number,
+      default: 10,
+    },
+    totalTickets: {
+      type: Number,
+    },
+  },
+  components: {
+    Pagination,
   },
   methods: {
     closeModal() {

@@ -12,14 +12,20 @@ export const useTicketStore = defineStore("ticket", {
     prev_page_url: null,
     ticket: null,
     isLoading: false,
+    per_page: 10,
+    total_tickets: null
   }),
 
   actions: {
-    async fetchData() {
+    async fetchData(pageNumber = 1, limit = 10, search = '') {
       this.isLoading = true;
       try {
-        const response = await api.get('/tickets');
+        const response = await api.get(`/tickets?page=${pageNumber}&per_page=${limit}&q=${search}`);
         this.tickets = response.data.payload.data.data;
+        this.last_page = response.data.payload.data.last_page;
+        this.current_page = response.data.payload.data.current_page;
+        this.per_page = response.data.payload.data.per_page;
+        this.total_tickets = response.data.payload.data.total;
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {

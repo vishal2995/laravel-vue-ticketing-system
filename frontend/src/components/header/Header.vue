@@ -1,6 +1,6 @@
 <template>
     <nav class="w-full bg-white shadow">
-      <div class="sm:container xl:container mx-auto px-5 xl:px-0">
+      <div class="sm:container xl:container mx-auto px-5">
         <div class="flex justify-between h-16">
           <div class="flex">
             <a

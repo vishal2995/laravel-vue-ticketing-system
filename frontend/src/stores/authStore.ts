@@ -1,7 +1,6 @@
 
 import { defineStore } from "pinia";
 import api from "@/utils/axios";
-import { toast } from "vue3-toastify";
 import Cookies from "js-cookie";
 import router from "@/router";
 
@@ -9,14 +8,10 @@ export const useAuthStore = defineStore("auth", {
     state: () => ({
         user: null,
         token: null,
-        loading: false,
-        error: null,
     }),
 
     actions: {
         async login(credentials: { email: string; password: string }) {
-            this.loading = true;
-            this.error = null;
             try {
                 const response = await api.post("/login", credentials);
                 this.user = response.data.user;
@@ -24,23 +19,28 @@ export const useAuthStore = defineStore("auth", {
                 if (token) {
                     Cookies.set("auth_token", token, { expires: 1 });
                 }
-                toast.success(response.data.message);
-            } catch (error) {
-                console.error("Error submitting form:", error);
-            } finally {
-                this.loading = false;
+
+                return {
+                    success: true,
+                }
+            } catch (error : any) {
+                throw new Error(error.response?.data?.message || error.message);
             }
         },
         async register(data: { email: string, name: string, password: string, password_confirmation: string  }) {
-            this.loading = true;
-            this.error = null;
             try {
                 const response = await api.post("/register", data);
-                toast.success(response.data.message);
-            } catch (error) {
-                console.error("Error submitting form:", error);
-            } finally {
-                this.loading = false;
+                this.user = response.data.user;
+                const token = response.data.token;
+                if (token) {
+                    Cookies.set("auth_token", token, { expires: 1 });
+                }
+
+                return {
+                    success: true,
+                }
+            } catch (error :any) {
+                throw new Error(error.response?.data?.message || error.message);
             }
         },
         logout(){
